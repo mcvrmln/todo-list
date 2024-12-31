@@ -1,27 +1,32 @@
 """ Entry point of the application """
 
+import click
+
 from model import Item
 from fileitemrepository import FileItemRepository
 
 # ToDo implement click tasks: add {task},  show, done {id}
 
 
-def run_app():
+@click.command()
+@click.option("--add", default="Do something", help="Add a task.")
+@click.option("--show", default="All", help="Shows list of tasks (All, Done, Todo).")
+@click.option("--done", help="Give task_id and this task will be registered as done.")
+def run_app(add, show, done):
     print(f"First step")
-
-    item1 = Item(task="Do something")
     itemrepository = FileItemRepository(r"./data/output/todoitems.json")
-    itemrepository.add(item1)
 
-    item = itemrepository.get(itemrepository.find_last_id() - 1)
-    if type(item) == Item:
-        if item.end_date == None:
-            item.done()
-        else:
-            item.undone()
-        print(item.model_dump_json())
+    if add != None:
+        item = Item(task=add)
+        itemrepository.add(item)
+        itemrepository.save_data()
 
-    itemrepository.save_data()
+    if show != None:
+        print(f"ToDo: print{show=}")
+
+    if done != None:
+        print(f"ToDo: print{done=}")
+
     print("Finished")
 
 
