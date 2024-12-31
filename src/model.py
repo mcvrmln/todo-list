@@ -11,5 +11,9 @@ class Item(BaseModel):
     start_date: datetime = datetime.now()
     end_date: datetime | None = None
 
-    def done(self):
-        self.end_date = datetime.now()
+    def done(self) -> None:
+        if self.end_date == None:
+            self.end_date = datetime.now()
+
+    def undone(self) -> None:
+        self.end_date = None

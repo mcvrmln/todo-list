@@ -3,17 +3,25 @@
 from model import Item
 from fileitemrepository import FileItemRepository
 
+# ToDo implement click tasks: add {task},  show, done {id}
+
 
 def run_app():
     print(f"First step")
 
-    item1 = Item(**{"item_id": 1, "task": "Do something"})
+    item1 = Item(task="Do something")
     itemrepository = FileItemRepository(r"./data/output/todoitems.json")
     itemrepository.add(item1)
 
-    item = itemrepository.get(1)
-    item.done()
-    print(item.model_dump_json())
+    item = itemrepository.get(itemrepository.find_last_id() - 1)
+    if type(item) == Item:
+        if item.end_date == None:
+            item.done()
+        else:
+            item.undone()
+        print(item.model_dump_json())
+
+    itemrepository.save_data()
     print("Finished")
 
 
